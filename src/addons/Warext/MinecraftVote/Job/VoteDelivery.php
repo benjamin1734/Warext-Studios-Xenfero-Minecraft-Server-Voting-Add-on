@@ -16,6 +16,7 @@ class VoteDelivery extends AbstractJob
         $started = microtime(true);
         $finder = $this->app->finder('Warext\MinecraftVote:Vote')
             ->pendingDelivery(\XF::$time)
+            ->with('Server')
             ->where('vote_id', '>', (int)$this->data['start'])
             ->limit(min(max((int)$this->data['batch'], 1), 100));
 

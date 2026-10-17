@@ -6,7 +6,7 @@ Warext Studios Minecraft Server & Vote System is a XenForo 2.3 add-on for Minecr
 
 ## Installation
 
-Upload `Warext-MinecraftVote-1.1.9.zip` directly through **Admin CP > Add-ons > Install/upgrade from archive** without extracting it. It can be upgraded directly over an existing installation.
+Upload `Warext-MinecraftVote-1.2.3.zip` directly through **Admin CP > Add-ons > Install/upgrade from archive** without extracting it. It can be upgraded directly over an existing installation.
 
 After installation, follow **Admin CP > Minecraft Server & Vote System > Installation & Configuration**.
 
@@ -102,3 +102,8 @@ Sorularınız, hata bildirimleriniz, kurulum desteği ve Warext Studios XenForo 
 
 ## Language support / Dil desteği
 
+
+
+## v1.2.3 performance and upgrade
+
+Vote ranking's recent-date aggregation now has a `(vote_date, server_id)` index for new installations and an automatic XenForo upgrade step for existing databases. Pending NuVotifier delivery jobs preload related server entities to avoid one separate lazy relation lookup per vote. Existing vote and server records are preserved. XenForo 2.3.13 has passed static checks, but live licensed XenForo runtime compatibility has not been certified.

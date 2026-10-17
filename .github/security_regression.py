@@ -203,8 +203,15 @@ if not version_match:
 major, minor, patch = (int(part) for part in version_match.groups())
 if patch > 9:
     raise SystemExit('Yama sürümü 9 üzerinde olamaz; sonraki orta sürüme geçilmeli.')
-if version_string != '1.2.2' or int(addon.get('version_id', 0)) < 1020020:
-    raise SystemExit('Sürüm numarası 1.2.2 değil.')
+expected_version_id = major * 1000000 + minor * 10000 + patch * 10
+if int(addon.get('version_id', 0)) != expected_version_id or (major, minor, patch) < (1, 2, 3):
+    raise SystemExit('Sürüm numarası ve ID uyumsuz.')
+setup_source = (ROOT / 'Setup.php').read_text(encoding='utf-8')
+if 'warext_mc_vote_date_server' not in setup_source or 'upgrade1020030Step1' not in setup_source:
+    raise SystemExit('Vote history aggregation index and safe upgrade step missing.')
+delivery_job = (ROOT / 'Job/VoteDelivery.php').read_text(encoding='utf-8')
+if "->pendingDelivery(\XF::$time)\n            ->with('Server')" not in delivery_job:
+    raise SystemExit('Vote delivery N+1 relation preloading is missing.')
 
 for path in ROOT.rglob('*.php'):
     text = path.read_text(encoding='utf-8')

@@ -167,6 +167,7 @@ class Setup extends AbstractSetup
             $table->addKey(['server_id', 'minecraft_username', 'vote_date'], 'warext_mc_vote_server_name');
             $table->addKey(['server_id', 'ip_hash', 'vote_date'], 'warext_mc_vote_server_ip');
             $table->addKey(['status', 'next_attempt_date'], 'warext_mc_vote_queue');
+            $table->addKey(['vote_date', 'server_id'], 'warext_mc_vote_date_server');
         });
     }
 
@@ -382,6 +383,20 @@ class Setup extends AbstractSetup
     public function upgrade1011010Step1(): void
     {
         $this->ensureThreadMediaIntegration();
+    }
+
+    public function upgrade1020030Step1(): void
+    {
+        $sm = $this->schemaManager();
+        if (!$sm->tableExists('xf_warext_mc_vote'))
+        {
+            return;
+        }
+
+        $sm->alterTable('xf_warext_mc_vote', function (Alter $table)
+        {
+            $table->addKey(['vote_date', 'server_id'], 'warext_mc_vote_date_server');
+        });
     }
 
     protected function ensureThreadMediaIntegration(): void
